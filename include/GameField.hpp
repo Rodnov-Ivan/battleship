@@ -17,11 +17,17 @@ class GameField{
         GameField(GameField&& other);
         GameField& operator=(const GameField& other);
         GameField& operator=(GameField&& other);
-        void placeShip(Ship* ship, Coordinates coords, Orientation orientation);
-        void attackCell(Coordinates coords);
+        ~GameField();
+
+        int getWidth();
+        int getHeight();
+        const std::vector<FieldCell>& getField() const;
         bool checkAttackCoord(Coordinates coord);
         bool checkFieldBorders(Ship* ship);
         bool checkShipsContact(Ship* ship);
+        void placeShip(Ship* ship, Coordinates coords, Orientation orientation);
+        void attackCell(Coordinates coords);
+        void removeShip(Ship* ship);
 };
 
-#endif GAMEFIELD_HPP
+#endif // GAMEFIELD_HPP

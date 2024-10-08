@@ -11,6 +11,7 @@ class Ship{
         int size;
         Orientation orientation;
         Coordinates coords;
+        bool isPlaced;
     public:
         Ship(int ShipSize);
         ~Ship();
@@ -20,6 +21,8 @@ class Ship{
         void setOrientation(Orientation shipOrientation);
         Orientation getOrientation() const;
         void setCoodrs(Coordinates coords);
+        bool getIsPlaced() const;
+        void setIsPlaced(bool placed);
 };
 
-#endif SHIP_HPP
+#endif // SHIP_HPP

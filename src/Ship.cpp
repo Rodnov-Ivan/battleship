@@ -1,8 +1,8 @@
 #include "Ship.hpp"
 
 Ship::Ship(int ShipSize)
-        :size(ShipSize),
-        segments(ShipSize),
+        :segments(ShipSize),
+        size(ShipSize),
         orientation(Orientation::Vertical){
     if(ShipSize  > 4 || ShipSize < 1){
         throw std::invalid_argument("Ship size must be in range[1-4]");
@@ -49,4 +49,12 @@ void Ship::setCoodrs(Coordinates coords){
             segments[i]->coord = {coords.x+i, coords.y};
         }
     }
+}
+
+bool Ship::getIsPlaced() const {
+    return isPlaced;
+}
+
+void Ship::setIsPlaced(bool placed){
+    isPlaced = placed;
 }

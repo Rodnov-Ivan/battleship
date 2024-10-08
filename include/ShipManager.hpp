@@ -18,4 +18,4 @@ class ShipManager{
         void printShipsInfo();
 };
 
-#endif SHIPMANAGER_HPP
+#endif // SHIPMANAGER_HPP

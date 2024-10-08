@@ -34,4 +34,4 @@ struct FieldCell{
 
 };
 
-#endif STRUCTURES_HPP
+#endif // STRUCTURES_HPP

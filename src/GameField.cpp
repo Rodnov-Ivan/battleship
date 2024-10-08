@@ -39,6 +39,20 @@ GameField& GameField::operator=(GameField&& other) {
 	return *this;
 }
 
+GameField::~GameField() = default;
+
+int GameField::getWidth(){
+    return width;
+}
+
+int GameField::getHeight(){
+    return height;
+}
+
+const std::vector<FieldCell>& GameField::getField() const {
+    return field;
+}
+
 bool GameField::checkFieldBorders(Ship* ship){
     std::vector<ShipSegment*> segments = ship->getSegments();
     for(auto segment : segments){
@@ -84,17 +98,23 @@ bool GameField::checkAttackCoord(Coordinates coord){
 
 void GameField::placeShip(Ship* ship, Coordinates coords, Orientation orientation){
     if(ship == nullptr){
-        throw std::invalid_argument("Invalid argument: ship is nullptr.");
+        std::cout << "Invalid argument: ship is nullptr." << std::endl;
+        return;
     }
-    int lenght = ship->getSize();
+
+    if(ship->getIsPlaced()){
+        removeShip(ship);
+    }
     ship->setOrientation(orientation);
     ship->setCoodrs(coords);
     std::vector<ShipSegment*> segments = ship->getSegments();
     if(!checkFieldBorders(ship)){
-        throw std::out_of_range("Ship is out of field"); 
+        std::cout << "Ship with size " << ship->getSize() << " is out of field" << std::endl; 
+        return;
     }
     if(!checkShipsContact(ship)){
-        throw std::runtime_error("Ship has contact with other");
+        std::cout << "Ship with size " << ship->getSize() << " has contact with other on coords " << coords.x << ", " << coords.y << std::endl; 
+        return;
     }
     for(auto segment : segments){
         int x = segment->coord.x;
@@ -104,35 +124,63 @@ void GameField::placeShip(Ship* ship, Coordinates coords, Orientation orientatio
         field[index].shipSegment = segment;
         field[index].value = CellValue::ShipSegment;
     }
+    ship->setIsPlaced(true);
 }
 
 void GameField::attackCell(Coordinates coords){
    if (!checkAttackCoord(coords)) {
-        throw std::out_of_range("Attack coordinate is out of field");
+        std::cout << "Attack coordinate is out of field" << std::endl; 
+        return;
     }
     int index = coords.y * width + coords.x;
     FieldCell& cell = field[index];
 
-    if (cell.status == CellStatus::Open) {
-        std::cout << "Cell (" << coords.x << ", " << coords.y << ") has already been attacked." << std::endl;
-        return;
-    }
-
-    cell.status = CellStatus::Open;
-
     if (cell.shipSegment != nullptr) {
         ShipSegment* segment = cell.shipSegment;
-
+        
         if (segment->status == SegmentStatus::Unbroken) {
             segment->status = SegmentStatus::Damaged;
+            cell.status = CellStatus::Open;
             std::cout << "Hit! Segment at (" << coords.x << ", " << coords.y << ") is Damaged." << std::endl;
-        } else if (segment->status == SegmentStatus::Damaged) {
+        }
+        else if (segment->status == SegmentStatus::Damaged) {
             segment->status = SegmentStatus::Destroyed;
+            cell.status = CellStatus::Open;
             std::cout << "Hit! Segment at (" << coords.x << ", " << coords.y << ") is Destroyed." << std::endl;
         }
-    } else {
-        cell.value = CellValue::Miss;
-        std::cout << "Miss! No ship segment at (" << coords.x << ", " << coords.y << ")." << std::endl;
+        else if (segment->status == SegmentStatus::Destroyed) {
+            std::cout << "Segment at (" << coords.x << ", " << coords.y << ") is already Destroyed." << std::endl;
+        }
     }
+    else {
+        if (cell.status == CellStatus::Open) {
+            std::cout << "Cell (" << coords.x << ", " << coords.y << ") has already been attacked." << std::endl;
+        }
+        else {
+            cell.status = CellStatus::Open;
+            cell.value = CellValue::Miss;
+            std::cout << "Miss! No ship segment at (" << coords.x << ", " << coords.y << ")." << std::endl;
+        }
+    }
+}
+
+void GameField::removeShip(Ship* ship){
+    if(ship == nullptr){
+        return;
+    }
+    const std::vector<ShipSegment*>& segments = ship->getSegments();
+    
+    for(auto& cell : field){
+        if(cell.shipSegment != nullptr){
+            for(auto segment : segments){
+                if(cell.shipSegment == segment){
+                    cell.shipSegment = nullptr;
+                    cell.value = CellValue::Empty;
+                    break;
+                }
+            }
+        }
+    }
+    ship->setIsPlaced(false);
 }
 
