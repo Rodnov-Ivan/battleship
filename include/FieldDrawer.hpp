@@ -9,7 +9,7 @@
 
 class FieldDrawer{
     public:
-        void draw(GameField& field, bool showShips = false) const;
+        void draw(GameField& field, bool showShips) const;
 };
 
 #endif // FIELDDRAWER_HPP
