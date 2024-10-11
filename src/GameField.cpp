@@ -88,7 +88,7 @@ bool GameField::checkShipsContact(Ship* ship){
                     int index = ny * width + nx;
                     FieldCell &cell = field[index];
                     if(cell.shipSegment != nullptr){
-                        std::cout << "Ship with size " << ship->getSize() << " has contact with other on coords,  write correct coords" << x << ", " << y << std::endl; 
+                        std::cout << "Ship with size " << ship->getSize() << " has contact with other on coords" << x << ", " << y << " write correct coords" << std::endl; 
                         int x; int y;
                         std::cin>>x>>y;
                         Coordinates segmentCoord = {x, y};
