@@ -21,7 +21,7 @@ struct ShipSegment{
     Coordinates coord;
     SegmentStatus status;
 
-    ShipSegment() : coord({ 0, 0 }), status(SegmentStatus::Unbroken) {}
+    ShipSegment() : coord({0, 0}), status(SegmentStatus::Unbroken) {}
     ShipSegment(Coordinates coord, SegmentStatus status) : coord(coord), status(status) {}
 };
 

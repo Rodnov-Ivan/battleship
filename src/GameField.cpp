@@ -1,7 +1,12 @@
 #include "GameField.hpp"
 
-GameField::GameField(int fieldHeight, int fieldWidth)
-    : height(fieldHeight), width(fieldWidth){
+GameField::GameField(int fieldHeight, int fieldWidth){
+    while(fieldHeight < 1 || fieldWidth < 1){
+        std::cout << "Invalid field sizes, write correct sizes" << std::endl;
+        std::cin >> fieldHeight >> fieldWidth;
+    }
+    height = fieldHeight;
+    width = fieldWidth;
     for(int y = 0; y < height; ++y){
         for(int x = 0; x < width; ++x){
             field.push_back(FieldCell(Coordinates{x, y}));
@@ -59,6 +64,11 @@ bool GameField::checkFieldBorders(Ship* ship){
         int x = segment->coord.x;
         int y = segment->coord.y;
         if(x < 0 || x >= width || y < 0 || y >= height){
+            std::cout << "Ship with size " << ship->getSize() << " is out of field, write correct coords" << std::endl; 
+            int x; int y;
+            std::cin>>x>>y;
+            Coordinates segmentCoord = {x, y};
+            ship->setCoodrs(segmentCoord);
             return false;
         }
     }
@@ -78,6 +88,11 @@ bool GameField::checkShipsContact(Ship* ship){
                     int index = ny * width + nx;
                     FieldCell &cell = field[index];
                     if(cell.shipSegment != nullptr){
+                        std::cout << "Ship with size " << ship->getSize() << " has contact with other on coords,  write correct coords" << x << ", " << y << std::endl; 
+                        int x; int y;
+                        std::cin>>x>>y;
+                        Coordinates segmentCoord = {x, y};
+                        ship->setCoodrs(segmentCoord);
                         return false;
                     }
                 }
@@ -108,14 +123,11 @@ void GameField::placeShip(Ship* ship, Coordinates coords, Orientation orientatio
     ship->setOrientation(orientation);
     ship->setCoodrs(coords);
     std::vector<ShipSegment*> segments = ship->getSegments();
-    if(!checkFieldBorders(ship)){
-        std::cout << "Ship with size " << ship->getSize() << " is out of field" << std::endl; 
-        return;
+    while (checkFieldBorders(ship) == false || checkShipsContact(ship) == false){
+        checkFieldBorders(ship);
+        checkShipsContact(ship);
     }
-    if(!checkShipsContact(ship)){
-        std::cout << "Ship with size " << ship->getSize() << " has contact with other on coords " << coords.x << ", " << coords.y << std::endl; 
-        return;
-    }
+    
     for(auto segment : segments){
         int x = segment->coord.x;
         int y = segment->coord.y;

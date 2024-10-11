@@ -6,7 +6,7 @@
 #include "Structures.hpp"
 
 int main(){
-    GameField field(10, 10);
+    GameField field(-1, -1);
 
     std::vector<int> shipSizes = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
     ShipManager manager(shipSizes);
@@ -15,9 +15,9 @@ int main(){
 
     field.placeShip(ships[0], Coordinates{5, 5}, Orientation::Horizontal);
     field.placeShip(ships[1], Coordinates{6, 1}, Orientation::Horizontal);
-    field.placeShip(ships[2], Coordinates{100, 5}, Orientation::Horizontal);
+    field.placeShip(ships[2], Coordinates{100, 5}, Orientation::Horizontal);//5 3
     field.placeShip(ships[4], Coordinates{2, 8}, Orientation::Vertical);
-    field.placeShip(ships[5], Coordinates{6, 5}, Orientation::Horizontal);
+    field.placeShip(ships[5], Coordinates{6, 5}, Orientation::Horizontal);//5 7
     field.placeShip(ships[3], Coordinates{2, 2}, Orientation::Vertical);
     field.placeShip(ships[6], Coordinates{9, 9}, Orientation::Horizontal);
     field.placeShip(ships[7], Coordinates{0, 4}, Orientation::Horizontal);
@@ -51,7 +51,7 @@ int main(){
     field.attackCell(Coordinates{100, 100});
 
     std::cout << "\nAttack cell (3, 7):" << std::endl;
-    field.attackCell(Coordinates{7, 2});
+    field.attackCell(Coordinates{3, 7});
 
     std::cout << "\nAttack cell (2, 7):" << std::endl;
     field.attackCell(Coordinates{2, 7});
